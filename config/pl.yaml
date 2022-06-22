@@ -1,0 +1,16 @@
+# config for lightning-related modules
+datamodule:
+  # dataset for stroke prediction cloned from Kaggle https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset
+  # url to GitHub gist to download the data
+  url: https://gist.githubusercontent.com/kengz/833544b48224922b86215d645a8c8b71/raw/cec0340503d82d270821e03254993b6dede60afb/healthcare-dataset-stroke-data.csv
+  data_filename: mode2data.pkl
+  train_frac: 0.8 # train/val split
+dataloader:
+  batch_size: 32
+model:
+  hidden_size: 64
+  learning_rate: 2e-4
+trainer:
+  accelerator: auto # will switch to GPU if available
+  max_epochs: 10 # set to None to auto-stop on convergence
+resume: false # resume training from the latest checkpoint

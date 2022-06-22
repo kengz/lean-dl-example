@@ -1,0 +1,36 @@
+dataset:
+  transform:
+    module: sklearn
+    n_jobs: -1
+  use_sha: true
+transform:
+  x:
+    gender:
+      OneHotEncoder:
+        sparse: false
+    age:
+      StandardScaler:
+    hypertension:
+      Identity:
+    heart_disease:
+      Identity:
+    ever_married:
+      OrdinalEncoder:
+    work_type:
+      OneHotEncoder:
+        sparse: false
+    Residence_type:
+      OrdinalEncoder:
+    avg_glucose_level:
+      StandardScaler:
+    bmi:
+      StandardScaler:
+      impute.SimpleImputer: # handle na values
+        strategy: constant
+        fill_value: -1
+    smoking_status:
+      OneHotEncoder:
+        sparse: false
+  y:
+    stroke:
+      Identity:
