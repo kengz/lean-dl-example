@@ -1,0 +1,40 @@
+# PyTorch LightningModule config
+# model architecture using TorchArc
+arc:
+  dag_in_shape:
+    main: [18] # get from transform log
+  main:
+    type: Linear
+    layers: [8, 8]
+    batch_norm: true
+    activation: ReLU
+    dropout: 0.1
+  out:
+    type: Linear
+    out_features: 1
+
+# criterion (loss function)
+loss:
+  type: BCEWithLogitsLoss
+  pos_weight: 1.0
+
+# optimizer
+optim:
+  type: Adam
+  lr: 1e-3
+
+# torchmetrics.MetricCollection for evaluation
+metric:
+  # e.g. Precision: {num_classes: 3, average: 'macro'}
+  Accuracy:
+  Precision:
+  Recall:
+  F1Score:
+# which of the metric above to return from main() for Optuna sweep
+optuna_metric: F1Score
+
+# Lighting Trainer
+trainer:
+  max_epochs: 100 # set to null to auto-stop on convergence
+  accelerator: auto # will switch to GPU if available
+  log_every_n_steps: 1

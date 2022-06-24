@@ -1,0 +1,4 @@
+defaults:
+  - transform
+  - datamodule
+  - lightning

@@ -1,0 +1,38 @@
+# config for feature_transform
+dataset:
+  transform:
+    module: sklearn
+    n_jobs: -1
+  use_sha: true
+transform:
+  x:
+    Age:
+      StandardScaler:
+    Sex:
+      OrdinalEncoder:
+    ChestPainType:
+      OneHotEncoder:
+        sparse: false
+    RestingBP:
+      StandardScaler:
+    Cholesterol:
+      StandardScaler:
+      impute.SimpleImputer: # handle na values
+        strategy: mean
+    FastingBS:
+      Identity:
+    RestingECG:
+      OneHotEncoder:
+        sparse: false
+    MaxHR:
+      StandardScaler:
+    ExerciseAngina:
+      OrdinalEncoder:
+    Oldpeak:
+      StandardScaler:
+    ST_Slope:
+      OneHotEncoder:
+        sparse: false
+  y:
+    HeartDisease:
+      OrdinalEncoder:
