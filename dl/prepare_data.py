@@ -13,13 +13,13 @@ class DLDataModule(pl.LightningDataModule):
     def __init__(self, cfg):
         super().__init__()
         self.cfg = cfg
-        self.url = cfg.datamodule.url
-        self.data_path = DIR / 'data' / cfg.datamodule.data_filename
+        self.csv = cfg.datamodule.csv  # raw data
+        self.data_path = DIR / 'data' / cfg.datamodule.data_filename  # transformed data
         self.train_frac = cfg.datamodule.train_frac
 
     def prepare_data(self):
         if not self.data_path.exists():
-            data_df = pd.read_csv(self.url)
+            data_df = pd.read_csv(self.csv)
             mode2data = transform.fit_transform(self.cfg, stage='fit', df=data_df)  # format: {'x': np.ndarray, 'y': np.ndarray}
             util.write(mode2data, self.data_path)
 

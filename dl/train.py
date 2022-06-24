@@ -1,28 +1,14 @@
-from contextlib import suppress
 from dl import DIR
 from dl.prepare_data import DLDataModule
-from torch import optim
 import hydra
 import pydash as ps
 import pytorch_lightning as pl
-import torch
 import torcharc
 import torchmetrics
 
 
-def build_criterion(loss_spec: dict) -> torch.nn.Module:
-    '''Build criterion (loss function) from loss spec'''
-    criterion_cls = getattr(torch.nn, loss_spec.pop('type'))
-    # any numeric arg has to be tensor; scan and try-cast
-    for k, v in loss_spec.items():
-        with suppress(Exception):
-            loss_spec[k] = torch.tensor(v)
-    criterion = criterion_cls(**loss_spec)
-    return criterion
-
-
 def build_metrics(metric_spec: dict) -> torchmetrics.MetricCollection:
-    '''Build torchmetrics.MetricCollection from metric spec'''
+    '''Build torchmetrics.MetricCollection from metric spec. Ref: https://torchmetrics.readthedocs.io/en/stable/pages/overview.html?highlight=collection#metriccollection'''
     metrics = torchmetrics.MetricCollection([
         getattr(torchmetrics, metric_name)(**(v or {})) for metric_name, v in metric_spec.items()
     ])
@@ -37,7 +23,7 @@ class DLModel(pl.LightningModule):
         self.save_hyperparameters()
         self.spec = hydra.utils.instantiate(cfg, _convert_='all')  # convert to dict
         self.model = torcharc.build(self.spec['arc'])
-        self.criterion = build_criterion(self.spec['loss'])
+        self.criterion = torcharc.build_criterion(self.spec['loss'])
         self.metrics = build_metrics(self.spec['metric'])
 
     def forward(self, x):
@@ -57,16 +43,13 @@ class DLModel(pl.LightningModule):
         pred = logit.sigmoid().round().squeeze()
         target = y.long().squeeze()
         metrics = self.metrics(pred, target)
-        # log to TensorBoard
         self.log('losses', {'val': loss}, prog_bar=True)
         self.log_dict(metrics, prog_bar=True)
+        self.log('hp_metric', metrics[self.spec['optuna_metric']])  # tensorboard hparams metric for visualization
         return loss
 
     def configure_optimizers(self):
-        optim_spec = self.spec['optim']
-        optim_cls = getattr(optim, optim_spec.pop('type'))
-        optimizer = optim_cls(self.parameters(), **optim_spec)
-        return optimizer
+        return torcharc.build_optimizer(self.spec['optim'], self)
 
 
 @hydra.main(version_base=None, config_path=DIR / 'config', config_name='config')

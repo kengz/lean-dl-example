@@ -6,6 +6,7 @@ from setuptools.command.test import test
 
 test_args = [
     '--verbose',
+    '-W ignore',  # ignore warnings
     '--capture=sys',
     '--log-level=INFO',
     '--log-file-level=INFO',
@@ -50,6 +51,12 @@ setup(
         'testing': [],
     },
     classifiers=[],
+    tests_require=[
+        'autopep8',
+        'flake8',
+        'pytest',
+        'pytest-cov',
+    ],
     test_suite='test',
     cmdclass={'test': PyTest},
 )
