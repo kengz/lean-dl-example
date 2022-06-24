@@ -1,0 +1,9 @@
+# PyTorch LightningDataModule configs
+datamodule:
+  # dataset for stroke prediction cloned from Kaggle https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset
+  # url to GitHub gist to download the data
+  url: https://gist.githubusercontent.com/kengz/833544b48224922b86215d645a8c8b71/raw/cec0340503d82d270821e03254993b6dede60afb/healthcare-dataset-stroke-data.csv
+  data_filename: mode2data.pkl
+  train_frac: 0.8 # train/val split
+dataloader:
+  batch_size: 64

@@ -1,45 +1,44 @@
+from contextlib import suppress
 from dl import DIR
 from dl.prepare_data import DLDataModule
-from pathlib import Path
 from torch import optim
-from torch.nn import functional
-from torchmetrics import Accuracy
 import hydra
+import pydash as ps
 import pytorch_lightning as pl
+import torch
 import torcharc
+import torchmetrics
 
 
-def get_ckpt_path(cfg) -> Path:
-    '''Get the ckpt_path for resuming training from the last of lightning_logs/version_x if requested and available'''
-    ckpt_path = None  # default
-    if not cfg.get('resume'):  # don't resume
-        return ckpt_path
+def build_criterion(loss_spec: dict) -> torch.nn.Module:
+    '''Build criterion (loss function) from loss spec'''
+    criterion_cls = getattr(torch.nn, loss_spec.pop('type'))
+    # any numeric arg has to be tensor; scan and try-cast
+    for k, v in loss_spec.items():
+        with suppress(Exception):
+            loss_spec[k] = torch.tensor(v)
+    criterion = criterion_cls(**loss_spec)
+    return criterion
 
-    # first, try .pl_auto_save.ckpt from PL_FAULT_TOLERANT_TRAINING
-    if (path := DIR / '.pl_auto_save.ckpt').exists():
-        ckpt_path = path
-    # next, find the latest lightning_logs/version_*/checkpoints/*.ckpt by creation time
-    elif (default_dir := DIR / 'lightning_logs').exists():
-        ckpts = default_dir.glob('version_*/checkpoints/*.ckpt')
-        if latest_ckpt := max(ckpts, key=lambda x: x.stat().st_ctime):
-            ckpt_path = latest_ckpt
 
-    if ckpt_path is None:
-        raise FileNotFoundError('Trying to resume training from a checkpoint but could not find one')
-    else:
-        print(f'Resuming training from checkpoint: {ckpt_path}')
-        return ckpt_path
+def build_metrics(metric_spec: dict) -> torchmetrics.MetricCollection:
+    '''Build torchmetrics.MetricCollection from metric spec'''
+    metrics = torchmetrics.MetricCollection([
+        getattr(torchmetrics, metric_name)(**(v or {})) for metric_name, v in metric_spec.items()
+    ])
+    return metrics
 
 
 class DLModel(pl.LightningModule):
+    '''Deep Learning model built from config specifying architecture, loss, and optimizer'''
+
     def __init__(self, cfg):
         super().__init__()
-        self.cfg = cfg
-        # convert to dict and build model
-        arc = hydra.utils.instantiate(cfg.arc, _convert_='all')
-        self.model = torcharc.build(arc)
-        self.loss_fn = getattr(functional, cfg.loss)
-        self.accuracy = Accuracy()
+        self.save_hyperparameters()
+        self.spec = hydra.utils.instantiate(cfg, _convert_='all')  # convert to dict
+        self.model = torcharc.build(self.spec['arc'])
+        self.criterion = build_criterion(self.spec['loss'])
+        self.metrics = build_metrics(self.spec['metric'])
 
     def forward(self, x):
         return self.model(x)
@@ -47,28 +46,24 @@ class DLModel(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         logit = self(x)
-        loss = self.loss_fn(logit, y)
-        self.log('train_loss', loss, prog_bar=True)
+        loss = self.criterion(logit, y)
+        self.log('losses', {'train': loss}, prog_bar=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logit = self(x)
-        loss = self.loss_fn(logit, y)
-        pred = logit.sigmoid().round()
-        self.accuracy(pred.squeeze(), y.long().squeeze())
-
-        # Calling self.log will surface up scalars for you in TensorBoard
-        self.log('val_loss', loss, prog_bar=True)
-        self.log('val_acc', self.accuracy, prog_bar=True)
+        loss = self.criterion(logit, y)
+        pred = logit.sigmoid().round().squeeze()
+        target = y.long().squeeze()
+        metrics = self.metrics(pred, target)
+        # log to TensorBoard
+        self.log('losses', {'val': loss}, prog_bar=True)
+        self.log_dict(metrics, prog_bar=True)
         return loss
 
-    def test_step(self, batch, batch_idx):
-        # Here we just reuse the validation_step for testing
-        return self.validation_step(batch, batch_idx)
-
     def configure_optimizers(self):
-        optim_spec = hydra.utils.instantiate(self.cfg.optim, _convert_='all')
+        optim_spec = self.spec['optim']
         optim_cls = getattr(optim, optim_spec.pop('type'))
         optimizer = optim_cls(self.parameters(), **optim_spec)
         return optimizer
@@ -80,7 +75,8 @@ def main(cfg):
     model = DLModel(cfg)
 
     trainer = pl.Trainer(**cfg.trainer)
-    trainer.fit(model, datamodule=dm, ckpt_path=get_ckpt_path(cfg))
+    trainer.fit(model, datamodule=dm)
+    return ps.get(trainer.callback_metrics, cfg.optuna_metric)
 
 
 if __name__ == '__main__':
