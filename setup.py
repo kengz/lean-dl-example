@@ -33,7 +33,7 @@ class PyTest(test):
 
 setup(
     name='dl',
-    version='0.0.0',
+    version='0.0.2',
     description='Example of a lean deep learning project with a config-driven approach.',
     long_description='https://github.com/kengz/lean-dl-example',
     keywords='dl',

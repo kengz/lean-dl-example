@@ -1,5 +1,5 @@
 from conftest import get_cfg
-from dl.prepare_data import DLDataModule
+from dl.datamodule import DLDataModule
 
 
 def test_prepare_data():
