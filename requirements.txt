@@ -1,7 +1,7 @@
-feature_transform==0.3.0
+feature_transform
 hydra-core==1.2.0
 hydra-optuna-sweeper==1.2.0
 pillow
 pytorch-lightning
-torcharc==1.2.0
+torcharc
 -e .

@@ -1,5 +1,5 @@
 from dl import DIR
-from dl.prepare_data import DLDataModule
+from dl.datamodule import DLDataModule
 import hydra
 import pydash as ps
 import pytorch_lightning as pl
