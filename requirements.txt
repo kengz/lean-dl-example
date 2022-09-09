@@ -1,7 +1,0 @@
-feature_transform
-hydra-core==1.2.0
-hydra-optuna-sweeper==1.2.0
-pillow
-pytorch-lightning
-torcharc
--e .
