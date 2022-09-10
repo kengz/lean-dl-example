@@ -4,7 +4,7 @@ Example of a lean deep learning project with a config-driven approach.
 
 ## Installation
 
-[Install Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) if you haven't already.
+[Install Conda through Miniforge](https://github.com/conda-forge/miniforge#homebrew) if you haven't already.
 
 Create a Conda environment and install dependencies. This example uses:
 
@@ -16,18 +16,26 @@ Create a Conda environment and install dependencies. This example uses:
 - [PyTorch-TensorBoard](https://pytorch.org/docs/stable/tensorboard.html) for visualizing training progress and hyperparameter search
 
 ```bash
-conda create -n dl python=3.10.4 -y
-conda activate dl
-pip install -r requirements.txt
+conda env create --file environment.yml
 ```
 
 ## Usage
+
+### Unit Test
+
+Run unit test to ensure module is set up correctly.
+
+```bash
+pytest
+```
 
 ### Training
 
 Inspect/modify the Hydra config in `config/`. Then run:
 
 ```bash
+conda activate dl
+
 python dl/train.py
 
 # fault tolerant (resumable) training
