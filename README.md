@@ -19,6 +19,8 @@ Create a Conda environment and install dependencies. This example uses:
 conda env create --file environment.yml
 ```
 
+> Run `conda activate dl` to enter the environment first.
+
 ## Usage
 
 ### Unit Test
@@ -34,8 +36,6 @@ pytest
 Inspect/modify the Hydra config in `config/`. Then run:
 
 ```bash
-conda activate dl
-
 python dl/train.py
 
 # fault tolerant (resumable) training
