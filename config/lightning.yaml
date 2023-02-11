@@ -26,10 +26,10 @@ optim:
 # torchmetrics.MetricCollection for evaluation
 metric:
   # e.g. Precision: {num_classes: 3, average: 'macro'}
-  Accuracy:
-  Precision:
-  Recall:
-  F1Score:
+  Accuracy: { task: binary }
+  Precision: { task: binary }
+  Recall: { task: binary }
+  F1Score: { task: binary }
 # which of the metric above to return from main() for Optuna sweep
 optuna_metric: F1Score
 
