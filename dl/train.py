@@ -9,9 +9,11 @@ import torchmetrics
 
 def build_metrics(metric_spec: dict) -> torchmetrics.MetricCollection:
     '''Build torchmetrics.MetricCollection from metric spec. Ref: https://torchmetrics.readthedocs.io/en/stable/pages/overview.html?highlight=collection#metriccollection'''
-    metrics = torchmetrics.MetricCollection([
-        getattr(torchmetrics, metric_name)(**(v or {})) for metric_name, v in metric_spec.items()
-    ])
+    metrics = torchmetrics.MetricCollection({
+        metric_name: getattr(torchmetrics, metric_name)(**(v or {}))
+        for metric_name, v in metric_spec.items()
+    })
+    print('Metrics:', metrics)
     return metrics
 
 
