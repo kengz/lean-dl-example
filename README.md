@@ -134,3 +134,18 @@ tensorboard --logdir .
 ![TensorBoard tuning scatter](doc/tb_tune_scatter.png)
 
 > TensorBoard scatter plot showing hyperparameter search results.
+
+### dstack usage
+
+To use with [dstack](https://docs.dstack.ai), use the workflows defined in `.dstack/workflows.yaml`.
+
+```bash
+conda activate dl
+
+# setup dstack
+pip install -U dstack
+dstack init
+
+# run workflow
+dstack run setup-train
+```
