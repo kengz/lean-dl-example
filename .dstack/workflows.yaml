@@ -1,0 +1,65 @@
+workflows:
+  - name: setup-train
+    help: Directly setup Conda env and train, all-in-one
+    provider: bash
+    commands:
+      - conda env create --file environment.yml
+      - conda activate dl
+      - python dl/train.py
+    artifacts:
+      - path: lightning_logs
+
+  - name: setup-conda
+    help: Setup Conda env as artifact for reuse by mounting
+    provider: bash
+    commands:
+      - conda env create --file environment.yml
+    artifacts:
+      - path: /opt/conda/envs/dl
+
+  - name: test-conda
+    help: Quick test of Conda env
+    provider: bash
+    deps:
+      - workflow: setup-conda
+    commands:
+      - conda env list
+      - conda activate dl
+      - python --version
+      - python -c 'import torch; print(torch.__version__)'
+
+  - name: download
+    help: Download the MNIST dataset
+    provider: bash
+    deps:
+      - workflow: setup-conda
+    commands:
+      - conda activate dl
+      - python dl/datamodule.py
+    artifacts:
+      - path: data
+
+  - name: train
+    help: Train an MNIST model
+    provider: bash
+    deps:
+      - workflow: setup-conda
+      - workflow: download
+    commands:
+      - conda activate dl
+      - python dl/train.py
+    artifacts:
+      - path: lightning_logs
+
+  - name: tune
+    help: Run hyperparameter tuning using Optuna and Hydra
+    provider: bash
+    deps:
+      - workflow: setup-conda
+      - workflow: download
+    commands:
+      - conda activate dl
+      - python dl/train.py hydra/sweeper=optuna +optuna=tune --multirun
+    artifacts:
+      - path: lightning_logs
+      - path: multirun
