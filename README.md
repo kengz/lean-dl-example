@@ -4,7 +4,7 @@ Example of a lean deep learning project with a config-driven approach.
 
 ## Installation
 
-[Install Conda through Miniforge](https://github.com/conda-forge/miniforge#homebrew) if you haven't already.
+[Install Miniconda (through Miniforge)](https://github.com/conda-forge/miniforge#homebrew) if you haven't already.
 
 Create a Conda environment and install dependencies. This example uses:
 
@@ -19,7 +19,7 @@ Create a Conda environment and install dependencies. This example uses:
 conda env create --file environment.yml
 ```
 
-> Run `conda activate dl` to enter the environment first.
+> Before running any commands below, activate the environment first with `conda activate dl`
 
 ## Usage
 
@@ -91,26 +91,7 @@ Missing logger folder: /Users/redrose/lean-dl-example/lightning_logs
 265       Total params
 0.001     Total estimated model params size (MB)
 Epoch 99: 100%|█████████████████████████████████████| 15/15 [00:00<00:00, 128.89it/s, loss=0.843, v_num=0, losses={'val': 0.8364414572715759}, Accuracy=0.549, Precision=0.555, Recall=0.909, F1Score=0.688]
-[2022-06-24 19:02:49,437][HYDRA] Launching 1 jobs locally
 ...
-[2022-06-24 19:28:52,104][HYDRA] Launching 1 jobs locally
-[2022-06-24 19:28:52,104][HYDRA] 	#99 : arc.main.layers=[8,8] arc.main.dropout=0.09820219968782427 loss.pos_weight=2.4295991695810226 optim.type=Adam optim.lr=0.0016705280295178648 +optuna=tune
-GPU available: False, used: False
-TPU available: False, using: 0 TPU cores
-IPU available: False, using: 0 IPUs
-HPU available: False, using: 0 HPUs
-
-  | Name      | Type              | Params
-------------------------------------------------
-0 | model     | DAGNet            | 265
-1 | criterion | BCEWithLogitsLoss | 0
-2 | metrics   | MetricCollection  | 0
-------------------------------------------------
-265       Trainable params
-0         Non-trainable params
-265       Total params
-0.001     Total estimated model params size (MB)
-Epoch 99: 100%|████████████████████████████████████| 15/15 [00:00<00:00, 79.45it/s, loss=0.377, v_num=99, losses={'val': 0.47382786870002747}, Accuracy=0.848, Precision=0.826, Recall=0.923, F1Score=0.868]
 [2022-06-24 19:29:12,666][HYDRA] Best parameters: {'arc.main.layers': '[8]', 'arc.main.dropout': 0.11879921503186516, 'loss.pos_weight': 5.0779681113146555, 'optim.type': 'Adam', 'optim.lr': 0.001365972987748234}
 [2022-06-24 19:29:12,667][HYDRA] Best value: 0.912898600101471
 ```
@@ -137,15 +118,22 @@ tensorboard --logdir .
 
 ### dstack usage
 
-To use with [dstack](https://docs.dstack.ai), use the workflows defined in `.dstack/workflows.yaml`.
+For [dstack](https://docs.dstack.ai) usage, including interactive development, see workflows defined in `.dstack/workflows/*.yaml`.
+
+First, start dstack hub:
 
 ```bash
-conda activate dl
-
 # setup dstack
 pip install -U dstack
-dstack init
+# start dstack hub
+dstack start
+```
 
+Then in a new shell, init dstack project and run workflow:
+
+```bash
+# initialize project
+dstack init
 # run workflow
-dstack run setup-train
+dstack run conda-setup-train
 ```

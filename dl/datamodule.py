@@ -39,7 +39,7 @@ class DLDataModule(pl.LightningDataModule):
         return DataLoader(self.val_dataset, **self.cfg.dataloader)
 
 
-@hydra.main(version_base=None, config_path=DIR / 'config', config_name='config')
+@hydra.main(version_base=None, config_path=str(DIR / 'config'), config_name='config')
 def main(cfg):
     dm = DLDataModule(cfg)
     dm.prepare_data()

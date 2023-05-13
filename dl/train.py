@@ -13,7 +13,6 @@ def build_metrics(metric_spec: dict) -> torchmetrics.MetricCollection:
         metric_name: getattr(torchmetrics, metric_name)(**(v or {}))
         for metric_name, v in metric_spec.items()
     })
-    print('Metrics:', metrics)
     return metrics
 
 
@@ -35,7 +34,7 @@ class DLModel(pl.LightningModule):
         x, y = batch
         logit = self(x)
         loss = self.criterion(logit, y)
-        self.log('losses', {'train': loss}, prog_bar=True)
+        self.log('train_loss', loss, prog_bar=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -45,7 +44,7 @@ class DLModel(pl.LightningModule):
         pred = logit.sigmoid().round().squeeze()
         target = y.long().squeeze()
         metrics = self.metrics(pred, target)
-        self.log('losses', {'val': loss}, prog_bar=True)
+        self.log('val_loss', loss, prog_bar=True)
         self.log_dict(metrics, prog_bar=True)
         self.log('hp_metric', metrics[self.spec['optuna_metric']])  # tensorboard hparams metric for visualization
         return loss
@@ -54,7 +53,7 @@ class DLModel(pl.LightningModule):
         return torcharc.build_optimizer(self.spec['optim'], self)
 
 
-@hydra.main(version_base=None, config_path=DIR / 'config', config_name='config')
+@hydra.main(version_base=None, config_path=str(DIR / 'config'), config_name='config')
 def main(cfg):
     dm = DLDataModule(cfg)
     model = DLModel(cfg)

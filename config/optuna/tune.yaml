@@ -2,7 +2,7 @@
 # doc: https://hydra.cc/docs/plugins/optuna_sweeper/
 sampler:
   seed: 42
-study_name: tune
+study_name: dl-tune
 direction: maximize
 storage: null
 n_trials: 100
