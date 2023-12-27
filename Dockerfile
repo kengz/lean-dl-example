@@ -17,7 +17,7 @@ ENV POETRY_NO_INTERACTION=1 \
 
 # Install dependencies
 ENV PATH="$WORKDIR/.venv/bin:$PATH"
-COPY poetry.toml poetry.lock pyproject.toml ./
+COPY poetry.lock pyproject.toml ./
 RUN poetry install --no-root --without dev && rm -rf $POETRY_CACHE_DIR
 
 COPY . .
