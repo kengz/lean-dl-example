@@ -4,9 +4,7 @@ Example of a lean deep learning project with a config-driven approach.
 
 ## Installation
 
-[Install Miniconda (through Miniforge)](https://github.com/conda-forge/miniforge#homebrew) if you haven't already.
-
-Create a Conda environment and install dependencies. This example uses:
+Create a Poetry environment and install dependencies. This example uses:
 
 - [Hydra](https://hydra.cc) for composable config
 - [feature_transform](https://github.com/kengz/feature_transform) for config-driven feature transformation
@@ -15,11 +13,30 @@ Create a Conda environment and install dependencies. This example uses:
 - [Optuna (with Hydra)](https://hydra.cc/docs/plugins/optuna_sweeper/) for hyperparameter search
 - [PyTorch-TensorBoard](https://pytorch.org/docs/stable/tensorboard.html) for visualizing training progress and hyperparameter search
 
+1. [Install pyenv](https://github.com/pyenv/pyenv#automatic-installer) to manage Python version generically, and use Python 3.11.0 (or higher):
+
 ```bash
-conda env create --file environment.yml
+curl https://pyenv.run | bash
+# and follow the instructions printout
+
+# install and set Python 3.11.0
+pyenv install 3.11.0
+pyenv global 3.11.0
+python -V
+# => Python 3.11.0
 ```
 
-> Before running any commands below, activate the environment first with `conda activate dl`
+2. [Install Poetry](https://python-poetry.org/docs/) for Python dependency management; then install this project and its dependencies:
+
+```bash
+# install poetry if not already
+curl -sSL https://install.python-poetry.org | python - --version 1.6.1
+
+# install this project and its dependencies
+poetry install
+```
+
+> Always activate env with `poetry shell` first, or prepend `poetry run` to any commands.
 
 ## Usage
 
@@ -118,22 +135,26 @@ tensorboard --logdir .
 
 ### dstack usage
 
-For [dstack](https://docs.dstack.ai) usage, including interactive development, see workflows defined in `.dstack/workflows/*.yaml`.
+For [dstack](https://docs.dstack.ai) usage, including interactive development, see workflows defined in `.dstack/*.dstack.yml`.
 
-First, start dstack hub:
+First, [follow the doc to setup](https://dstack.ai/docs/#configure-the-server) either dstack or cloud accounts locally. E.g. using Azure CLI and dstack Open-source server:
 
 ```bash
-# setup dstack
-pip install -U dstack
-# start dstack hub
-dstack start
+# install and start dstack
+pip install 'dstack[all]'
+# start dstack server
+dstack server
 ```
 
 Then in a new shell, init dstack project and run workflow:
 
 ```bash
-# initialize project
+# initialize project (only the first time)
 dstack init
-# run workflow
-dstack run conda-setup-train
+# run IDE for remote development
+dstack run . -f .dstack/dev.dstack.yml
+# run training task
+dstack run . -f .dstack/train.dstack.yml
+# run service
+dstack run . -f .dstack/service.dstack.yml
 ```

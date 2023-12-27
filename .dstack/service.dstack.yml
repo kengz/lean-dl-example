@@ -1,0 +1,11 @@
+type: task
+
+ports:
+  - 6006
+
+python: "3.11"
+
+commands:
+  - pip install poetry==1.6.1
+  - poetry install
+  - tensorboard --logdir .
