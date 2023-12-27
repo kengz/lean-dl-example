@@ -34,7 +34,6 @@ addopts = [
     "--cov=dl",
     "--cov-report=html",
     "--cov-report=term",
-    "--no-flaky-report",
 ]
 filterwarnings = "ignore"
 

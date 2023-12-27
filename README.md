@@ -135,22 +135,26 @@ tensorboard --logdir .
 
 ### dstack usage
 
-For [dstack](https://docs.dstack.ai) usage, including interactive development, see workflows defined in `.dstack/workflows/*.yaml`.
+For [dstack](https://docs.dstack.ai) usage, including interactive development, see workflows defined in `.dstack/*.dstack.yml`.
 
-First, start dstack hub:
+First, [follow the doc to setup](https://dstack.ai/docs/#configure-the-server) either dstack or cloud accounts locally. E.g. using Azure CLI and dstack Open-source server:
 
 ```bash
-# setup dstack
-pip install -U dstack
-# start dstack hub
-dstack start
+# install and start dstack
+pip install 'dstack[all]'
+# start dstack server
+dstack server
 ```
 
 Then in a new shell, init dstack project and run workflow:
 
 ```bash
-# initialize project
+# initialize project (only the first time)
 dstack init
-# run workflow
-dstack run conda-setup-train
+# run IDE for remote development
+dstack run . -f .dstack/dev.dstack.yml
+# run training task
+dstack run . -f .dstack/train.dstack.yml
+# run service
+dstack run . -f .dstack/service.dstack.yml
 ```
