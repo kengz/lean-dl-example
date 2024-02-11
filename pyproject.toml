@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dl"
-version = "0.3.0"
+version = "0.4.0"
 description = "Example of a lean deep learning project with a config-driven approach."
 authors = ["kengz <kengzwl@gmail.com>"]
 license = "MIT"
