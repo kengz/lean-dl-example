@@ -13,25 +13,14 @@ Create a Poetry environment and install dependencies. This example uses:
 - [Optuna (with Hydra)](https://hydra.cc/docs/plugins/optuna_sweeper/) for hyperparameter search
 - [PyTorch-TensorBoard](https://pytorch.org/docs/stable/tensorboard.html) for visualizing training progress and hyperparameter search
 
-1. [Install pyenv](https://github.com/pyenv/pyenv#automatic-installer) to manage Python version generically, and use Python 3.11.0 (or higher):
-
-```bash
-curl https://pyenv.run | bash
-# and follow the instructions printout
-
-# install and set Python 3.11.0
-pyenv install 3.11.0
-pyenv global 3.11.0
-python -V
-# => Python 3.11.0
-```
-
-2. [Install Poetry](https://python-poetry.org/docs/) for Python dependency management; then install this project and its dependencies:
+1. [Install Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) for Python dependency management; then install this project and its dependencies:
 
 ```bash
 # install poetry if not already
-curl -sSL https://install.python-poetry.org | python - --version 1.6.1
+curl -sSL https://install.python-poetry.org | python -
 
+# switch to the same Python version as the project
+poetry env use 3.11
 # install this project and its dependencies
 poetry install
 ```
