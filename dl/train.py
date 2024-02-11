@@ -1,10 +1,12 @@
-from dl import DIR
-from dl.datamodule import DLDataModule
 import hydra
 import pydash as ps
 import pytorch_lightning as pl
+import torch
 import torcharc
 import torchmetrics
+
+from dl import DIR
+from dl.datamodule import DLDataModule
 
 
 def build_metrics(metric_spec: dict) -> torchmetrics.MetricCollection:
@@ -24,6 +26,8 @@ class DLModel(pl.LightningModule):
         self.save_hyperparameters()
         self.spec = hydra.utils.instantiate(cfg, _convert_='all')  # convert to dict
         self.model = torcharc.build(self.spec['arc'])
+        # for to_onnx to infer input shape
+        self.example_input_array = torch.randn(1, cfg.arc.dag_in_shape['main'][0])
         self.criterion = torcharc.build_criterion(self.spec['loss'])
         self.metrics = build_metrics(self.spec['metric'])
 
@@ -60,6 +64,7 @@ def main(cfg):
 
     trainer = pl.Trainer(**cfg.trainer)
     trainer.fit(model, datamodule=dm)
+    model.to_onnx(cfg.onnx.path, export_params=True)
     return ps.get(trainer.callback_metrics, cfg.optuna_metric)
 
 

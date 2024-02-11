@@ -39,3 +39,6 @@ trainer:
   max_epochs: 100 # set to null to auto-stop on convergence
   accelerator: auto # will switch to GPU if available
   log_every_n_steps: 1
+
+onnx:
+  path: model.onnx
