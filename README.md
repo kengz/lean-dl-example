@@ -13,25 +13,14 @@ Create a Poetry environment and install dependencies. This example uses:
 - [Optuna (with Hydra)](https://hydra.cc/docs/plugins/optuna_sweeper/) for hyperparameter search
 - [PyTorch-TensorBoard](https://pytorch.org/docs/stable/tensorboard.html) for visualizing training progress and hyperparameter search
 
-1. [Install pyenv](https://github.com/pyenv/pyenv#automatic-installer) to manage Python version generically, and use Python 3.11.0 (or higher):
-
-```bash
-curl https://pyenv.run | bash
-# and follow the instructions printout
-
-# install and set Python 3.11.0
-pyenv install 3.11.0
-pyenv global 3.11.0
-python -V
-# => Python 3.11.0
-```
-
-2. [Install Poetry](https://python-poetry.org/docs/) for Python dependency management; then install this project and its dependencies:
+1. [Install Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) for Python dependency management; then install this project and its dependencies:
 
 ```bash
 # install poetry if not already
-curl -sSL https://install.python-poetry.org | python - --version 1.6.1
+curl -sSL https://install.python-poetry.org | python -
 
+# switch to the same Python version as the project
+poetry env use 3.11
 # install this project and its dependencies
 poetry install
 ```
@@ -50,7 +39,7 @@ pytest
 
 ### Training
 
-Inspect/modify the Hydra config in `config/`. Then run:
+Inspect/modify the Hydra config in [config/](./config/). Then run:
 
 ```bash
 python dl/train.py
@@ -60,6 +49,16 @@ PL_FAULT_TOLERANT_TRAINING=1 python dl/train.py
 
 # to change configs
 python dl/train.py dataloader.batch_size=32 arc.main.layers='[64,64]'
+```
+
+When training ends, besides PyTorch Lightning checkpoint, it will also export to ONNX model `model.onnx`.
+
+### Serving
+
+The example [app/main.py](app/main.py) uses FastAPI to serve the exported ONNX model for inference. To run:
+
+```bash
+gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
 ### Hyperparameter Search
@@ -141,7 +140,7 @@ First, [follow the doc to setup](https://dstack.ai/docs/#configure-the-server) e
 
 ```bash
 # install and start dstack
-pip install 'dstack[all]'
+pip install 'dstack[all]' -U
 # start dstack server
 dstack server
 ```
@@ -155,6 +154,8 @@ dstack init
 dstack run . -f .dstack/dev.dstack.yml
 # run training task
 dstack run . -f .dstack/train.dstack.yml
-# run service
-dstack run . -f .dstack/service.dstack.yml
+# run training with tensorboard on open port
+dstack run . -f .dstack/train-monitor.dstack.yml
+# run service with FastAPI serving ONNX
+dstack run . -f .dstack/serve.dstack.yml
 ```

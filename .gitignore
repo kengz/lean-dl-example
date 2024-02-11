@@ -4,6 +4,7 @@ lightning_logs/
 multirun/
 outputs/
 *.ckpt
+*.onnx
 
 # System
 .DS_Store
