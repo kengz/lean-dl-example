@@ -53,6 +53,14 @@ python dl/train.py dataloader.batch_size=32 arc.main.layers='[64,64]'
 
 When training ends, besides PyTorch Lightning checkpoint, it will also export to ONNX model `model.onnx`.
 
+### Serving
+
+The example [app/main.py](app/main.py) uses FastAPI to serve the exported ONNX model for inference. To run:
+
+```bash
+gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+```
+
 ### Hyperparameter Search
 
 By using config-based approach, any variant to the run can be specified as parameter overrides to Hydra configs - hence we can tune hyperparameters without any code changes.
@@ -123,14 +131,6 @@ tensorboard --logdir .
 ![TensorBoard tuning scatter](doc/tb_tune_scatter.png)
 
 > TensorBoard scatter plot showing hyperparameter search results.
-
-### Serving
-
-The example [app/main.py](app/main.py) uses FastAPI to serve the exported ONNX model for inference. To run:
-
-```bash
-gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
-```
 
 ### dstack usage
 
