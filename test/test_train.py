@@ -1,4 +1,4 @@
-from conftest import get_cfg
+from dl import get_cfg
 from dl.train import main
 
 
