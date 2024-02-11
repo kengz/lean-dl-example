@@ -129,7 +129,7 @@ tensorboard --logdir .
 The example [app/main.py](app/main.py) uses FastAPI to serve the exported ONNX model for inference. To run:
 
 ```bash
-gunicorn app.main:app -kuvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
 ### dstack usage
@@ -140,7 +140,7 @@ First, [follow the doc to setup](https://dstack.ai/docs/#configure-the-server) e
 
 ```bash
 # install and start dstack
-pip install 'dstack[all]'
+pip install 'dstack[all]' -U
 # start dstack server
 dstack server
 ```
@@ -156,4 +156,6 @@ dstack run . -f .dstack/dev.dstack.yml
 dstack run . -f .dstack/train.dstack.yml
 # run training with tensorboard on open port
 dstack run . -f .dstack/train-monitor.dstack.yml
+# run service with FastAPI serving ONNX
+dstack run . -f .dstack/serve.dstack.yml
 ```
