@@ -144,6 +144,6 @@ dstack init
 dstack run . -f .dstack/dev.dstack.yml
 # run training task
 dstack run . -f .dstack/train.dstack.yml
-# run service
-dstack run . -f .dstack/service.dstack.yml
+# run training with tensorboard on open port
+dstack run . -f .dstack/train-monitor.dstack.yml
 ```
