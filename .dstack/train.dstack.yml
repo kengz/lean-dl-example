@@ -1,8 +1,8 @@
 type: task
 
-python: "3.11"
+python: "3.12"
 
 commands:
-  - pip install poetry==1.6.1
-  - poetry install
-  - python dl/train.py
+  - pip install uv
+  - uv sync
+  - uv run dl/train.py

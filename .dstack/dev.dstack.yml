@@ -1,5 +1,5 @@
 type: dev-environment
 
-python: "3.11"
+python: "3.12"
 
 ide: vscode
