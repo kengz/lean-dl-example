@@ -4,7 +4,7 @@ Example of a lean deep learning project with a config-driven approach.
 
 ## Installation
 
-Create a Poetry environment and install dependencies. This example uses:
+Create a virtual environment and install dependencies. This example uses:
 
 - [Hydra](https://hydra.cc) for composable config
 - [feature_transform](https://github.com/kengz/feature_transform) for config-driven feature transformation
@@ -13,19 +13,15 @@ Create a Poetry environment and install dependencies. This example uses:
 - [Optuna (with Hydra)](https://hydra.cc/docs/plugins/optuna_sweeper/) for hyperparameter search
 - [PyTorch-TensorBoard](https://pytorch.org/docs/stable/tensorboard.html) for visualizing training progress and hyperparameter search
 
-1. [Install Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) for Python dependency management; then install this project and its dependencies:
+1. [Install uv](https://docs.astral.sh/uv/getting-started/installation/) for dependency management if you haven't already. Then run:
 
 ```bash
-# install poetry if not already
-curl -sSL https://install.python-poetry.org | python -
+# install uv if not already
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# switch to the same Python version as the project
-poetry env use 3.11
-# install this project and its dependencies
-poetry install
+# setup virtualenv
+uv sync
 ```
-
-> Always activate env with `poetry shell` first, or prepend `poetry run` to any commands.
 
 ## Usage
 
@@ -34,7 +30,7 @@ poetry install
 Run unit test to ensure module is set up correctly.
 
 ```bash
-pytest
+uv run pytest
 ```
 
 ### Training
@@ -42,13 +38,13 @@ pytest
 Inspect/modify the Hydra config in [config/](./config/). Then run:
 
 ```bash
-python dl/train.py
+uv run dl/train.py
 
 # fault tolerant (resumable) training
-PL_FAULT_TOLERANT_TRAINING=1 python dl/train.py
+PL_FAULT_TOLERANT_TRAINING=1 uv run dl/train.py
 
 # to change configs
-python dl/train.py dataloader.batch_size=32 arc.main.layers='[64,64]'
+uv run dl/train.py dataloader.batch_size=32 arc.main.layers='[64,64]'
 ```
 
 When training ends, besides PyTorch Lightning checkpoint, it will also export to ONNX model `model.onnx`.
@@ -58,7 +54,7 @@ When training ends, besides PyTorch Lightning checkpoint, it will also export to
 The example [app/main.py](app/main.py) uses FastAPI to serve the exported ONNX model for inference. To run:
 
 ```bash
-gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+uv run gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
 ### Hyperparameter Search
@@ -72,15 +68,15 @@ Hydra has an [Optuna sweeper plugin](https://hydra.cc/docs/plugins/optuna_sweepe
 ```bash
 # hyperparameter search using Optuna + Hydra. Configure in config/optuna.yaml
 # view Optuna sweeper config
-python dl/train.py hydra/sweeper=optuna +optuna=tune -c hydra -p hydra.sweeper
+uv run dl/train.py hydra/sweeper=optuna +optuna=tune -c hydra -p hydra.sweeper
 # run Optuna sweeper using optuna/tune.yaml to search over tune and other hyperparams
-python dl/train.py hydra/sweeper=optuna +optuna=tune --multirun
+uv run dl/train.py hydra/sweeper=optuna +optuna=tune --multirun
 ```
 
 Example log from hyperparameter tuning:
 
 ```bash
-➜ python dl/train.py hydra/sweeper=optuna +optuna=tune --multirun
+➜ uv run dl/train.py hydra/sweeper=optuna +optuna=tune --multirun
 [I 2022-06-24 19:02:34,839] A new study created in memory with name: tune
 [2022-06-24 19:02:34,839][HYDRA] Study name: tune
 [2022-06-24 19:02:34,840][HYDRA] Storage: None
@@ -117,7 +113,7 @@ Epoch 99: 100%|█████████████████████�
 PyTorch Lightning logs to TensorBoard by default. To launch TensorBoard, run:
 
 ```bash
-tensorboard --logdir .
+uv run tensorboard --logdir .
 ```
 
 ![TensorBoard scalar plots](doc/tb_scalars.png)
@@ -139,8 +135,8 @@ For [dstack](https://docs.dstack.ai) usage, including interactive development, s
 First, [follow the doc to setup](https://dstack.ai/docs/#configure-the-server) either dstack or cloud accounts locally. E.g. using Azure CLI and dstack Open-source server:
 
 ```bash
-# install and start dstack
-pip install 'dstack[all]' -U
+# install and start dstack (pip for global binary)
+pip install dstack -U
 # start dstack server
 dstack server
 ```

@@ -3,8 +3,8 @@ type: service
 python: "3.11"
 
 commands:
-  - pip install poetry==1.6.1
-  - poetry install
-  - gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+  - pip install uv
+  - uv sync
+  - uv run gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 
 port: 8000

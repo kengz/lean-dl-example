@@ -1,26 +1,22 @@
+# Install uv
 FROM python:3.11-slim
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-ENV WORKDIR=/app
-WORKDIR $WORKDIR
-
-RUN apt-get update \
-    && apt-get install -y curl nano \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install poetry
-RUN pip install poetry==1.6.1
-
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_VIRTUALENVS_CREATE=1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache
+# Change the working directory to the `app` directory
+WORKDIR /app
 
 # Install dependencies
-ENV PATH="$WORKDIR/.venv/bin:$PATH"
-COPY poetry.toml poetry.lock pyproject.toml ./
-RUN poetry install --no-root --without dev && rm -rf $POETRY_CACHE_DIR
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project
 
-COPY . .
-RUN poetry install --without dev
+# Copy the project into the image
+ADD . /app
 
-CMD ["python", "dl/train.py"]
+# Sync the project
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen
+
+# Run the application
+CMD ["uv", "run", "dl/train.py"]
