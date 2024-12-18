@@ -1,6 +1,6 @@
 [project]
 name = "dl"
-version = "1.0.0"
+version = "0.5.0"
 description = "Example of a lean deep learning project with a config-driven approach."
 license = "MIT"
 readme = "README.md"
