@@ -10,26 +10,30 @@ from dl.datamodule import DLDataModule
 
 
 def build_metrics(metric_spec: dict) -> torchmetrics.MetricCollection:
-    '''Build torchmetrics.MetricCollection from metric spec. Ref: https://torchmetrics.readthedocs.io/en/stable/pages/overview.html?highlight=collection#metriccollection'''
-    metrics = torchmetrics.MetricCollection({
-        metric_name: getattr(torchmetrics, metric_name)(**(v or {}))
-        for metric_name, v in metric_spec.items()
-    })
+    """Build torchmetrics.MetricCollection from metric spec. Ref: https://torchmetrics.readthedocs.io/en/stable/pages/overview.html?highlight=collection#metriccollection"""
+    metrics = torchmetrics.MetricCollection(
+        {
+            metric_name: getattr(torchmetrics, metric_name)(**(v or {}))
+            for metric_name, v in metric_spec.items()
+        }
+    )
     return metrics
 
 
 class DLModel(pl.LightningModule):
-    '''Deep Learning model built from config specifying architecture, loss, and optimizer'''
+    """Deep Learning model built from config specifying architecture, loss, and optimizer"""
 
     def __init__(self, cfg):
         super().__init__()
         self.save_hyperparameters()
-        self.spec = hydra.utils.instantiate(cfg, _convert_='all')  # convert to dict
-        self.model = torcharc.build(self.spec['arc'])
+        self.spec = hydra.utils.instantiate(cfg, _convert_="all")  # convert to dict
+        self.model = torcharc.build(self.spec["model"])
         # for to_onnx to infer input shape
-        self.example_input_array = torch.randn(1, cfg.arc.dag_in_shape['main'][0])
-        self.criterion = torcharc.build_criterion(self.spec['loss'])
-        self.metrics = build_metrics(self.spec['metric'])
+        self.example_input_array = torch.randn(1, 18)
+
+        LossCls = getattr(torch.nn, self.spec["loss"].pop("type"))
+        self.criterion = LossCls(**self.spec["loss"])
+        self.metrics = build_metrics(self.spec["metric"])
 
     def forward(self, x):
         return self.model(x)
@@ -38,7 +42,7 @@ class DLModel(pl.LightningModule):
         x, y = batch
         logit = self(x)
         loss = self.criterion(logit, y)
-        self.log('train_loss', loss, prog_bar=True)
+        self.log("train_loss", loss, prog_bar=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -48,16 +52,19 @@ class DLModel(pl.LightningModule):
         pred = logit.sigmoid().round().squeeze()
         target = y.long().squeeze()
         metrics = self.metrics(pred, target)
-        self.log('val_loss', loss, prog_bar=True)
+        self.log("val_loss", loss, prog_bar=True)
         self.log_dict(metrics, prog_bar=True)
-        self.log('hp_metric', metrics[self.spec['optuna_metric']])  # tensorboard hparams metric for visualization
+        self.log(
+            "hp_metric", metrics[self.spec["optuna_metric"]]
+        )  # tensorboard hparams metric for visualization
         return loss
 
     def configure_optimizers(self):
-        return torcharc.build_optimizer(self.spec['optim'], self)
+        OptimCls = getattr(torch.optim, self.spec["optim"].pop("type"))
+        return OptimCls(self.parameters(), **self.spec["optim"])
 
 
-@hydra.main(version_base=None, config_path=str(DIR / 'config'), config_name='config')
+@hydra.main(version_base=None, config_path=str(DIR / "config"), config_name="config")
 def main(cfg):
     dm = DLDataModule(cfg)
     model = DLModel(cfg)
@@ -68,5 +75,5 @@ def main(cfg):
     return ps.get(trainer.callback_metrics, cfg.optuna_metric)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
