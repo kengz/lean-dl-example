@@ -44,7 +44,7 @@ uv run dl/train.py
 PL_FAULT_TOLERANT_TRAINING=1 uv run dl/train.py
 
 # to change configs
-uv run dl/train.py dataloader.batch_size=32 arc.main.layers='[64,64]'
+uv run dl/train.py dataloader.batch_size=32 model.modules.mlp.compact.layer.args='[64,64]'
 ```
 
 When training ends, besides PyTorch Lightning checkpoint, it will also export to ONNX model `model.onnx`.
@@ -83,7 +83,7 @@ Example log from hyperparameter tuning:
 [2022-06-24 19:02:34,840][HYDRA] Sampler: TPESampler
 [2022-06-24 19:02:34,840][HYDRA] Directions: ['maximize']
 [2022-06-24 19:02:34,852][HYDRA] Launching 1 jobs locally
-[2022-06-24 19:02:34,852][HYDRA] 	#0 : arc.main.layers=[8,8] arc.main.dropout=0.04679835610086079 loss.pos_weight=1.5227525095137953 optim.type=Adam optim.lr=1.2087541473056957e-05 +optuna=tune
+[2022-06-24 19:02:34,852][HYDRA] 	#0 : model.modules.mlp.compact.layer.args=[8,8] optim.type=Adam optim.lr=1.2087541473056957e-05 +optuna=tune
 [2022-06-24 19:02:35,083][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /var/folders/jx/z4vcr3393j537mmdc9jg1gsc0000gn/T/tmpits7qg55
 [2022-06-24 19:02:35,084][torch.distributed.nn.jit.instantiator][INFO] - Writing /var/folders/jx/z4vcr3393j537mmdc9jg1gsc0000gn/T/tmpits7qg55/_remote_module_non_sriptable.py
 GPU available: False, used: False
@@ -104,7 +104,7 @@ Missing logger folder: /Users/redrose/lean-dl-example/lightning_logs
 0.001     Total estimated model params size (MB)
 Epoch 99: 100%|█████████████████████████████████████| 15/15 [00:00<00:00, 128.89it/s, loss=0.843, v_num=0, losses={'val': 0.8364414572715759}, Accuracy=0.549, Precision=0.555, Recall=0.909, F1Score=0.688]
 ...
-[2022-06-24 19:29:12,666][HYDRA] Best parameters: {'arc.main.layers': '[8]', 'arc.main.dropout': 0.11879921503186516, 'loss.pos_weight': 5.0779681113146555, 'optim.type': 'Adam', 'optim.lr': 0.001365972987748234}
+[2022-06-24 19:29:12,666][HYDRA] Best parameters: {'model.modules.mlp.compact.layer.args': '[8]', 'optim.type': 'Adam', 'optim.lr': 0.001365972987748234}
 [2022-06-24 19:29:12,667][HYDRA] Best value: 0.912898600101471
 ```
 
