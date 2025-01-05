@@ -12,7 +12,7 @@ transform:
       OrdinalEncoder:
     ChestPainType:
       OneHotEncoder:
-        sparse: false
+        sparse_output: false
     RestingBP:
       StandardScaler:
     Cholesterol:
@@ -23,7 +23,7 @@ transform:
       Identity:
     RestingECG:
       OneHotEncoder:
-        sparse: false
+        sparse_output: false
     MaxHR:
       StandardScaler:
     ExerciseAngina:
@@ -32,7 +32,7 @@ transform:
       StandardScaler:
     ST_Slope:
       OneHotEncoder:
-        sparse: false
+        sparse_output: false
   y:
     HeartDisease:
       OrdinalEncoder:
