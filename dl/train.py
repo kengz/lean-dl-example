@@ -1,5 +1,4 @@
 import hydra
-import pydash as ps
 import pytorch_lightning as pl
 import torch
 import torcharc
@@ -28,12 +27,13 @@ class DLModel(pl.LightningModule):
         self.save_hyperparameters()
         self.spec = hydra.utils.instantiate(cfg, _convert_="all")  # convert to dict
         self.model = torcharc.build(self.spec["model"])
-        # for to_onnx to infer input shape
-        self.example_input_array = torch.randn(1, 18)
 
         LossCls = getattr(torch.nn, self.spec["loss"].pop("type"))
         self.criterion = LossCls(**self.spec["loss"])
         self.metrics = build_metrics(self.spec["metric"])
+
+        # for to_onnx to infer input shape, set in on_train_start
+        self.example_input_array = None
 
     def forward(self, x):
         return self.model(x)
@@ -63,6 +63,11 @@ class DLModel(pl.LightningModule):
         OptimCls = getattr(torch.optim, self.spec["optim"].pop("type"))
         return OptimCls(self.parameters(), **self.spec["optim"])
 
+    def on_train_start(self) -> None:
+        # set for to_onnx to infer input shape
+        train_loader = self.trainer.datamodule.train_dataloader()
+        self.example_input_array = next(iter(train_loader))[0]
+
 
 @hydra.main(version_base=None, config_path=str(DIR / "config"), config_name="config")
 def main(cfg):
@@ -72,7 +77,7 @@ def main(cfg):
     trainer = pl.Trainer(**cfg.trainer)
     trainer.fit(model, datamodule=dm)
     model.to_onnx(cfg.onnx.path, export_params=True)
-    return ps.get(trainer.callback_metrics, cfg.optuna_metric)
+    return trainer.callback_metrics.get(cfg.optuna_metric)
 
 
 if __name__ == "__main__":

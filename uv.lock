@@ -359,17 +359,8 @@ wheels = [
 ]
 
 [[package]]
-name = "dill"
-version = "0.3.9"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/70/43/86fe3f9e130c4137b0f1b50784dd70a5087b911fe07fa81e53e0c4c47fea/dill-0.3.9.tar.gz", hash = "sha256:81aa267dddf68cbfe8029c42ca9ec6a4ab3b22371d1c450abc54422577b4512c", size = 187000 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/46/d1/e73b6ad76f0b1fb7f23c35c6d95dbc506a9c8804f43dda8cb5b0fa6331fd/dill-0.3.9-py3-none-any.whl", hash = "sha256:468dff3b89520b474c0397703366b7b95eebe6303f108adf9b19da1f702be87a", size = 119418 },
-]
-
-[[package]]
 name = "dl"
-version = "0.6.0"
+version = "1.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
@@ -401,7 +392,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.115.6" },
-    { name = "feature-transform", specifier = ">=0.4.1" },
+    { name = "feature-transform", specifier = ">=1.0.1" },
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "hydra-core", specifier = ">=1.3.2" },
     { name = "hydra-optuna-sweeper", specifier = ">=1.2.0" },
@@ -409,11 +400,11 @@ requires-dist = [
     { name = "onnx", specifier = ">=1.17.0" },
     { name = "onnxruntime", specifier = ">=1.20.1" },
     { name = "pytorch-lightning", specifier = ">=2.4.0" },
-    { name = "scikit-learn", specifier = ">1.1.3" },
+    { name = "scikit-learn", specifier = ">=1.2.0" },
     { name = "tensorboard", specifier = ">=2.18.0" },
     { name = "torch", marker = "platform_system != 'Darwin'", specifier = ">=2.5.1", index = "https://download.pytorch.org/whl/cu124" },
     { name = "torch", marker = "platform_system == 'Darwin'", specifier = ">=2.5.1" },
-    { name = "torcharc", specifier = ">=2.1.1" },
+    { name = "torcharc", specifier = ">=2.1.2" },
     { name = "torchmetrics", specifier = ">=1.6.0" },
     { name = "uvicorn", specifier = ">=0.34.0" },
 ]
@@ -451,19 +442,18 @@ wheels = [
 
 [[package]]
 name = "feature-transform"
-version = "0.4.1"
+version = "1.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "dill" },
-    { name = "loguru" },
-    { name = "numpy" },
     { name = "pandas" },
-    { name = "pydash" },
+    { name = "polars" },
+    { name = "pydantic" },
     { name = "pyyaml" },
     { name = "scikit-learn" },
 ]
+sdist = { url = "https://files.pythonhosted.org/packages/e7/c6/15aa682fd6903baa9a9190b795b9f4b55d9798930d6d0e867d4740905ec7/feature_transform-1.0.1.tar.gz", hash = "sha256:70b29b4b8da91c92ce18cb33e58b3ac8f8efa2503776b6cb3a01853ce6c87aa7", size = 645680 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/06/cf/b840eec4d6eb1770133698ebda7dcfa24a6e8c0264ab3e3e21c4471dc894/feature_transform-0.4.1-py3-none-any.whl", hash = "sha256:6b79c3ca7d2a6690c51324f84d2940fe78ee7abcca31e41317c45a88a2003d62", size = 8495 },
+    { url = "https://files.pythonhosted.org/packages/af/20/66f06a5e030eafbfad8319dc6138e7788926d5cde263c2ff6d39ef868e79/feature_transform-1.0.1-py3-none-any.whl", hash = "sha256:59f36ea70ccea6cafa27c51795de8db9f8bc8998060f43f97b8a4430352fd8d8", size = 13206 },
 ]
 
 [[package]]
@@ -805,19 +795,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/8c/4d/54d38e237ab437f25f191602373d99b89d1d047ad2a3bb5ad0d84ea5daa6/lightning_utilities-0.11.9.tar.gz", hash = "sha256:f5052b81344cc2684aa9afd74b7ce8819a8f49a858184ec04548a5a109dfd053", size = 29362 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/85/f3/1305321a12c984405e26fc64b5d521569e9872fb811f4aace8e168099160/lightning_utilities-0.11.9-py3-none-any.whl", hash = "sha256:ac6d4e9e28faf3ff4be997876750fee10dc604753dbc429bf3848a95c5d7e0d2", size = 28356 },
-]
-
-[[package]]
-name = "loguru"
-version = "0.7.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "colorama", marker = "platform_system != 'Darwin' and sys_platform == 'win32'" },
-    { name = "win32-setctime", marker = "platform_system != 'Darwin' and sys_platform == 'win32'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/3a/05/a1dae3dffd1116099471c643b8924f5aa6524411dc6c63fdae648c4f1aca/loguru-0.7.3.tar.gz", hash = "sha256:19480589e77d47b8d85b2c827ad95d49bf31b0dcde16593892eb51dd18706eb6", size = 63559 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/29/0348de65b8cc732daa3e33e67806420b2ae89bdce2b04af740289c5c6c8c/loguru-0.7.3-py3-none-any.whl", hash = "sha256:31a33c10c8e1e10422bfd431aeb5d351c7cf7fa671e3c4df004162264b28220c", size = 61595 },
 ]
 
 [[package]]
@@ -1262,6 +1239,20 @@ wheels = [
 ]
 
 [[package]]
+name = "polars"
+version = "1.19.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/26/d9/66ada2204483c4c4d83898ade77eacd5fbef26ae4975a0d7d5de134ca46a/polars-1.19.0.tar.gz", hash = "sha256:b52ada5c43fcdadf64f282522198c5549ee4e46ea57d236a4d7e572643070d9d", size = 4267947 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c0/7d/e8645281281d44d96752443366ceef2df76c9c1e17dce040111abb6a4a12/polars-1.19.0-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:51c01837268a1aa41785e60ed7d3363d4b52f652ab0eef4981f887bdfa2e9ca7", size = 29472039 },
+    { url = "https://files.pythonhosted.org/packages/d7/fb/7e5054598d6bb7a47e4ca086797bae61270f7d570350cf779dd97384d913/polars-1.19.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:20f8235e810f6ee795d7a215a3560945e6a1b57d017f87ba0c8542dced1fc665", size = 26150541 },
+    { url = "https://files.pythonhosted.org/packages/ba/ba/6d715730c28b035abd308fc2cf0fcbae0cedea6216797e83ce4a9a96c6d4/polars-1.19.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:be0ea51f7b3553652bf0d53f3b925e969a898d4feb9980acecf8e3037d696903", size = 32751173 },
+    { url = "https://files.pythonhosted.org/packages/ea/9a/bee8ab37ab82b8eea75170afa3b37ea7e1df74e4c4da8f6c93b3009977fd/polars-1.19.0-cp39-abi3-manylinux_2_24_aarch64.whl", hash = "sha256:30305ef4e1b634c67a5d985832296fade9908482c5b1abb0100800808b2d090e", size = 29704437 },
+    { url = "https://files.pythonhosted.org/packages/57/ec/74afa5699e37e03e3acc7f241f4e2c3e8c91847524005424d9cf038b3034/polars-1.19.0-cp39-abi3-win_amd64.whl", hash = "sha256:de4aa45e24f8f94a1da9cc6031a7db6fa65ac7de8246fac0bc581ebb427d0643", size = 32846039 },
+    { url = "https://files.pythonhosted.org/packages/cf/5b/c6f6c70ddc9d3070dee65f4640437cb84ccb4cca04f7a81b01db15329ae3/polars-1.19.0-cp39-abi3-win_arm64.whl", hash = "sha256:d7ca7aeb63fa22c0a00f6cfa95dd5252c249e83dd4d1b954583a59f97a8e407b", size = 29029208 },
+]
+
+[[package]]
 name = "prettytable"
 version = "3.12.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1433,15 +1424,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/a4/99/bddde3ddde76c03b65dfd5a66ab436c4e58ffc42927d4ff1198ffbf96f5f/pydantic_core-2.27.2-cp313-cp313-win32.whl", hash = "sha256:1ebaf1d0481914d004a573394f4be3a7616334be70261007e47c2a6fe7e50130", size = 1834387 },
     { url = "https://files.pythonhosted.org/packages/71/47/82b5e846e01b26ac6f1893d3c5f9f3a2eb6ba79be26eef0b759b4fe72946/pydantic_core-2.27.2-cp313-cp313-win_amd64.whl", hash = "sha256:953101387ecf2f5652883208769a79e48db18c6df442568a0b5ccd8c2723abee", size = 1990453 },
     { url = "https://files.pythonhosted.org/packages/51/b2/b2b50d5ecf21acf870190ae5d093602d95f66c9c31f9d5de6062eb329ad1/pydantic_core-2.27.2-cp313-cp313-win_arm64.whl", hash = "sha256:ac4dbfd1691affb8f48c2c13241a2e3b60ff23247cbcf981759c768b6633cf8b", size = 1885186 },
-]
-
-[[package]]
-name = "pydash"
-version = "4.7.6"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/e9/19/f011f49df8a65c12179f1ce07745a5ae44a0b27d08e1c33d7312855f736d/pydash-4.7.6.tar.gz", hash = "sha256:a7733886ab811e36510b44ff1de7ccc980327d701fb444a4b2ce395e6f4a4a87", size = 134403 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/24/47/bcc6b8b50086c1d8e1f1be35944332a3ca159e98f36823568710271ecace/pydash-4.7.6-py2.py3-none-any.whl", hash = "sha256:bc9762159c3fd1f822b131a2d9cbb2b2036595a42ad257d2d821b29803d85f7d", size = 84506 },
 ]
 
 [[package]]
@@ -1909,15 +1891,15 @@ wheels = [
 
 [[package]]
 name = "torcharc"
-version = "2.1.1"
+version = "2.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
     { name = "pyyaml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a6/3a/6f3ad3db7a17bdcf29f442c333a7649d4db68d41f3605ac4857e27ae71d0/torcharc-2.1.1.tar.gz", hash = "sha256:eb7fdbeac5ec1272dacdc5ec909c9a53b11a976ac4bb06dba31c3ef365adac79", size = 1073547 }
+sdist = { url = "https://files.pythonhosted.org/packages/cc/cf/b8a997a406e7f6cfb6ceaf2847de71a8aea8be793ebecb5def82f32052f9/torcharc-2.1.2.tar.gz", hash = "sha256:d3edff680bdabf462ca9814bf77bf1726ec87df1cc82a81d4f2bf6ee108e84aa", size = 1073504 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/32/9e/982d735d56c79523ddb52e300e00cd78f871a905e995a7c3b208c14397db/torcharc-2.1.1-py3-none-any.whl", hash = "sha256:0752c06ebd8019554a35a61ff2b65a3cd7447279c476bdac220cb94cc6f841dd", size = 42079 },
+    { url = "https://files.pythonhosted.org/packages/78/f4/3ec0b0a887266d42aa89c52098a54fd07dae58fa8071ef2faf37960d9f7b/torcharc-2.1.2-py3-none-any.whl", hash = "sha256:78e99681d3ac529d70c591118f23a9b2047630c1e9097b808995bdf6bcbd4068", size = 42058 },
 ]
 
 [[package]]
@@ -2036,15 +2018,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/9f/69/83029f1f6300c5fb2471d621ab06f6ec6b3324685a2ce0f9777fd4a8b71e/werkzeug-3.1.3.tar.gz", hash = "sha256:60723ce945c19328679790e3282cc758aa4a6040e4bb330f53d30fa546d44746", size = 806925 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/52/24/ab44c871b0f07f491e5d2ad12c9bd7358e527510618cb1b803a88e986db1/werkzeug-3.1.3-py3-none-any.whl", hash = "sha256:54b78bf3716d19a65be4fceccc0d1d7b89e608834989dfae50ea87564639213e", size = 224498 },
-]
-
-[[package]]
-name = "win32-setctime"
-version = "1.2.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/b3/8f/705086c9d734d3b663af0e9bb3d4de6578d08f46b1b101c2442fd9aecaa2/win32_setctime-1.2.0.tar.gz", hash = "sha256:ae1fdf948f5640aae05c511ade119313fb6a30d7eabe25fef9764dca5873c4c0", size = 4867 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/e1/07/c6fe3ad3e685340704d314d765b7912993bcb8dc198f0e7a89382d37974b/win32_setctime-1.2.0-py3-none-any.whl", hash = "sha256:95d644c4e708aba81dc3704a116d8cbc974d70b3bdb8be1d150e36be6e9d1390", size = 4083 },
 ]
 
 [[package]]

@@ -2,23 +2,21 @@
 
 Example of a lean deep learning project with a config-driven approach.
 
-## Installation
-
-Create a virtual environment and install dependencies. This example uses:
+This example uses:
 
 - [Hydra](https://hydra.cc) for composable config
-- [feature_transform](https://github.com/kengz/feature_transform) for config-driven feature transformation
-- [TorchArc](https://github.com/kengz/torcharc) for config-driven model building
-- [PyTorch Lightning](https://www.pytorchlightning.ai) for research-focused development
+- [feature_transform](https://github.com/kengz/feature_transform) to build Scikit ColumnTransformers by specifying configs.
+- [TorchArc](https://github.com/kengz/torcharc) to build PyTorch models by specifying architectures.
+- [PyTorch Lightning](https://www.pytorchlightning.ai) to accelerate PyTorch engineering.
 - [Optuna (with Hydra)](https://hydra.cc/docs/plugins/optuna_sweeper/) for hyperparameter search
 - [PyTorch-TensorBoard](https://pytorch.org/docs/stable/tensorboard.html) for visualizing training progress and hyperparameter search
 
-1. [Install uv](https://docs.astral.sh/uv/getting-started/installation/) for dependency management if you haven't already. Then run:
+## Installation
+
+Create a virtual environment and install dependencies.
+[Install uv](https://docs.astral.sh/uv/getting-started/installation/) for dependency management if you haven't already. Then run:
 
 ```bash
-# install uv if not already
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
 # setup virtualenv
 uv sync
 ```

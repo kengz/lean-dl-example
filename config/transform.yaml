@@ -1,38 +1,19 @@
 # config for feature_transform
-dataset:
-  transform:
-    module: sklearn
-    n_jobs: -1
-  use_sha: true
 transform:
   x:
-    Age:
-      StandardScaler:
-    Sex:
-      OrdinalEncoder:
-    ChestPainType:
-      OneHotEncoder:
-        sparse_output: false
-    RestingBP:
-      StandardScaler:
-    Cholesterol:
-      StandardScaler:
-      impute.SimpleImputer: # handle na values
-        strategy: mean
-    FastingBS:
-      Identity:
-    RestingECG:
-      OneHotEncoder:
-        sparse_output: false
-    MaxHR:
-      StandardScaler:
-    ExerciseAngina:
-      OrdinalEncoder:
-    Oldpeak:
-      StandardScaler:
-    ST_Slope:
-      OneHotEncoder:
-        sparse_output: false
+    transformers:
+      - transformer:
+          preprocessing.RobustScaler: {}
+        columns: [Age, RestingBP, Cholesterol, MaxHR]
+      - transformer:
+          preprocessing.OneHotEncoder:
+            sparse_output: false
+        columns: [Sex, ChestPainType, RestingECG, ExerciseAngina, ST_Slope]
+      - transformer:
+          preprocessing.PowerTransformer: {}
+        columns: [FastingBS, Oldpeak]
+    n_jobs: -1
   y:
-    HeartDisease:
-      OrdinalEncoder:
+    transformers:
+      - transformer: passthrough
+        columns: [HeartDisease]
