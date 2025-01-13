@@ -1,5 +1,0 @@
-type: dev-environment
-
-python: "3.11"
-
-ide: vscode

@@ -49,11 +49,7 @@ When training ends, besides PyTorch Lightning checkpoint, it will also export to
 
 ### Serving
 
-The example [app/main.py](app/main.py) uses FastAPI to serve the exported ONNX model for inference. To run:
-
-```bash
-uv run gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
-```
+We recommend Lightning's [LitServe](https://github.com/Lightning-AI/LitServe) (which runs FastAPI) for flexibility or [NVIDIA Triton](https://github.com/triton-inference-server/server) for high performance.
 
 ### Hyperparameter Search
 
@@ -126,30 +122,6 @@ uv run tensorboard --logdir .
 
 > TensorBoard scatter plot showing hyperparameter search results.
 
-### dstack usage
+### Cloud
 
-For [dstack](https://docs.dstack.ai) usage, including interactive development, see workflows defined in `.dstack/*.dstack.yml`.
-
-First, [follow the doc to setup](https://dstack.ai/docs/#configure-the-server) either dstack or cloud accounts locally. E.g. using Azure CLI and dstack Open-source server:
-
-```bash
-# install and start dstack (pip for global binary)
-pip install dstack -U
-# start dstack server
-dstack server
-```
-
-Then in a new shell, init dstack project and run workflow:
-
-```bash
-# initialize project (only the first time)
-dstack init
-# run IDE for remote development
-dstack run . -f .dstack/dev.dstack.yml
-# run training task
-dstack run . -f .dstack/train.dstack.yml
-# run training with tensorboard on open port
-dstack run . -f .dstack/train-monitor.dstack.yml
-# run service with FastAPI serving ONNX
-dstack run . -f .dstack/serve.dstack.yml
-```
+We recommend [dstack](https://dstack.ai) for developing and running in the cloud easily without code modification.

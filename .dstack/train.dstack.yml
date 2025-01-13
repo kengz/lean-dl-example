@@ -1,8 +1,0 @@
-type: task
-
-python: "3.11"
-
-commands:
-  - pip install uv
-  - uv sync
-  - uv run dl/train.py
